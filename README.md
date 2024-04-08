@@ -1,2 +1,7 @@
-# Algorithm
-This is an auto push repository for Baekjoon Online Judge created with [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub).
+#
+# 백준, 프로그래머스 문제 풀이 목록
+## 📚 프로그래머스
+### 🚀 3
+| 문제번호 | 링크 |
+| ----- | ----- |
+|67259. ［카카오 인턴］ 경주로 건설|[링크](./%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4/3/67259.%E2%80%85%EF%BC%BB%EC%B9%B4%EC%B9%B4%EC%98%A4%E2%80%85%EC%9D%B8%ED%84%B4%EF%BC%BD%E2%80%85%EA%B2%BD%EC%A3%BC%EB%A1%9C%E2%80%85%EA%B1%B4%EC%84%A4/README.md)|
