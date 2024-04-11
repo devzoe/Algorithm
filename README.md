@@ -11,6 +11,7 @@
 |11399. ATM|[링크](./%EB%B0%B1%EC%A4%80/Silver/11399.%E2%80%85ATM/README.md)|
 |2178. 미로 탐색|[링크](./%EB%B0%B1%EC%A4%80/Silver/2178.%E2%80%85%EB%AF%B8%EB%A1%9C%E2%80%85%ED%83%90%EC%83%89/README.md)|
 |2606. 바이러스|[링크](./%EB%B0%B1%EC%A4%80/Silver/2606.%E2%80%85%EB%B0%94%EC%9D%B4%EB%9F%AC%EC%8A%A4/README.md)|
+|2839. 설탕 배달|[링크](./%EB%B0%B1%EC%A4%80/Silver/2839.%E2%80%85%EC%84%A4%ED%83%95%E2%80%85%EB%B0%B0%EB%8B%AC/README.md)|
 ## 📚 프로그래머스
 ### 🚀 2
 | 문제번호 | 링크 |
