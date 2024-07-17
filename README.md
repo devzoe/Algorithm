@@ -18,6 +18,7 @@
 |22865. 가장 먼 곳|[링크](./%EB%B0%B1%EC%A4%80/Gold/22865.%E2%80%85%EA%B0%80%EC%9E%A5%E2%80%85%EB%A8%BC%E2%80%85%EA%B3%B3/README.md)|
 |2573. 빙산|[링크](./%EB%B0%B1%EC%A4%80/Gold/2573.%E2%80%85%EB%B9%99%EC%82%B0/README.md)|
 |2580. 스도쿠|[링크](./%EB%B0%B1%EC%A4%80/Gold/2580.%E2%80%85%EC%8A%A4%EB%8F%84%EC%BF%A0/%EC%8A%A4%EB%8F%84%EC%BF%A0.swift)|
+|9251. LCS|[링크](./%EB%B0%B1%EC%A4%80/Gold/9251.%E2%80%85LCS/README.md)|
 ### 🚀 Silver
 | 문제번호 | 링크 |
 | ----- | ----- |
