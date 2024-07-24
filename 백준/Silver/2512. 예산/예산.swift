@@ -9,22 +9,27 @@ func readInput() -> (Int, Int, [Int]) {
 }
 
 func findMaxBudget(N: Int, budget: Int, request: [Int]) -> Int {
-    var maxBudget = request.max()!
-    while maxBudget > 0 {
+    var start = 0
+    var end = request.max()!
+    var result = 0
+    while start <= end {
         var sum = 0
+        let mid = (start + end) / 2
         for req in request {
-            if req < maxBudget {
+            if req < mid {
                 sum += req
             } else {
-                sum += maxBudget
+                sum += mid
             }
         }
         if sum <= budget {
-            return maxBudget
+            start = mid + 1
+            result = mid
+        } else {
+            end = mid - 1
         }
-        maxBudget -= 1
     }
-    return maxBudget
+    return result
 }
 
 let (N, budget, request) = readInput()
