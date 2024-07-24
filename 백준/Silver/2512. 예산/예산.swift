@@ -3,32 +3,30 @@ import Foundation
 func readInput() -> (Int, Int, [Int]) {
     let N = Int(readLine()!)!
     let request = readLine()!.split(separator: " ").map { Int($0)! }
-    let maxBudget = Int(readLine()!)!
+    let budget = Int(readLine()!)!
     
-    return (N, maxBudget, request)
+    return (N, budget, request)
 }
 
-func allocateBudget(N: Int, maxBudget: Int, request: [Int]) -> Int {
-    var max = request.max()!
-    var result = 0
-    for _ in stride(from: request.max()!, through: -1, by: -1) {
+func findMaxBudget(N: Int, budget: Int, request: [Int]) -> Int {
+    var maxBudget = request.max()!
+    while maxBudget > 0 {
         var sum = 0
-        for budget in request {
-            if budget < max {
-                sum += budget
+        for req in request {
+            if req < maxBudget {
+                sum += req
             } else {
-                sum += max
+                sum += maxBudget
             }
         }
-        if sum <= maxBudget {
-            result = max
-            break
+        if sum <= budget {
+            return maxBudget
         }
-        max -= 1
+        maxBudget -= 1
     }
-    return result
+    return maxBudget
 }
 
-let (N, maxBudget, request) = readInput()
-let result = allocateBudget(N: N, maxBudget: maxBudget, request: request)
+let (N, budget, request) = readInput()
+let result = findMaxBudget(N: N, budget: budget, request: request)
 print(result)
