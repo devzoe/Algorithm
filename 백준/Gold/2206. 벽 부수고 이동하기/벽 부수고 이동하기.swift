@@ -1,66 +1,58 @@
-import Foundation
-
-struct Position: Hashable {
-    let row: Int
-    let col: Int
-    let brokenWall: Int
-}
-
-let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-
-func isValid(_ row: Int, _ col: Int, _ n: Int, _ m: Int) -> Bool {
-    return row >= 0 && row < n && col >= 0 && col < m
-}
-
-func shortestPath(_ map: [[Int]], _ n: Int, _ m: Int) -> Int {
-    var queue = [(row: Int, col: Int, brokenWall: Int, steps: Int)]()
-    var front = 0
-    var visited = Array(repeating: Array(repeating: Array(repeating: false, count: 2), count: m), count: n)
+func solution(n: Int, m: Int, graph: [[Character]]) -> Int {
+    var visited = [[[Bool]]](repeating: [[Bool]](repeating: [Bool](repeating: false, count: m), count: n), count: 2)
     
-    queue.append((row: 0, col: 0, brokenWall: 0, steps: 1))
-    visited[0][0][0] = true
+    func isValidCoord(y: Int, x: Int) -> Bool {
+        return 0..<n ~= y && 0..<m ~= x
+    }
     
-    while front < queue.count {
-        let current = queue[front]
-        front += 1
-        
-        if current.row == n - 1 && current.col == m - 1 {
-            return current.steps
+    let dx = [1, 0, -1, 0]
+    let dy = [0, 1, 0, -1]
+
+    var queue = [(0, 0, 1, 0)]
+    var index = 0
+    var answer = -1
+
+    while queue.count > index {
+        let y = queue[index].0
+        let x = queue[index].1
+        let d = queue[index].2
+        let brokenCount = queue[index].3
+
+        if y == n - 1 && x == m - 1 {
+            answer = d
+            break
         }
-        
-        for direction in directions {
-            let newRow = current.row + direction.0
-            let newCol = current.col + direction.1
-            
-            if isValid(newRow, newCol, n, m) {
-                if map[newRow][newCol] == 0 && !visited[newRow][newCol][current.brokenWall] {
-                    queue.append((row: newRow, col: newCol, brokenWall: current.brokenWall, steps: current.steps + 1))
-                    visited[newRow][newCol][current.brokenWall] = true
-                } else if map[newRow][newCol] == 1 && current.brokenWall == 0 && !visited[newRow][newCol][1] {
-                    queue.append((row: newRow, col: newCol, brokenWall: 1, steps: current.steps + 1))
-                    visited[newRow][newCol][1] = true
-                }
+
+        for i in 0..<4 {
+            let ny = y + dy[i]
+            let nx = x + dx[i]
+
+            if !isValidCoord(y: ny, x: nx) || visited[brokenCount][ny][nx] {
+                continue
+            }
+
+            if graph[ny][nx] == "0" {
+                visited[brokenCount][ny][nx] = true
+                queue.append((ny, nx, d + 1, brokenCount))
+            }
+
+            if graph[ny][nx] == "1" && brokenCount == 0 {
+                visited[brokenCount + 1][ny][nx] = true
+                queue.append((ny, nx, d + 1, brokenCount + 1))
             }
         }
+        index += 1
     }
-    
-    return -1
+
+    return answer
 }
 
-if let input = readLine() {
-    let dimensions = input.split(separator: " ").map { Int($0)! }
-    let n = dimensions[0]
-    let m = dimensions[1]
-    
-    var map = [[Int]]()
-    
-    for _ in 0..<n {
-        if let line = readLine() {
-            let row = line.map { Int(String($0))! }
-            map.append(row)
-        }
-    }
-    
-    let result = shortestPath(map, n, m)
-    print(result)
+let input = readLine()!.split(separator: " ").map { Int($0)! }
+let n = input[0], m = input[1]
+var graph: [[Character]] = []
+for _ in 0..<n {
+    graph.append(readLine()!.map { $0 })
 }
+
+let result = solution(n: n, m: m, graph: graph)
+print(result)
