@@ -40,7 +40,7 @@ func dfs(map: inout [[Int]], start: (x: Int, y: Int)) -> Int {
     return out
 }
 
-func findComplexes(map: inout [[Int]]) -> [Int] {
+func solution(map: inout [[Int]]) -> [Int] {
     var answer = [Int]()
     var complexNumber = 0
     
@@ -61,4 +61,4 @@ func findComplexes(map: inout [[Int]]) -> [Int] {
 
 
 var map = readInput()
-findComplexes(map: &map)
+solution(map: &map)
