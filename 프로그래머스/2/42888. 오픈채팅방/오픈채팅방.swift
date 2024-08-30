@@ -7,17 +7,16 @@ func solution(_ record:[String]) -> [String] {
     
     for r in record {
         let line = r.split(separator: " ")
-        let info: String = String(line[0])
-        let uid: String = String(line[1])
-        if info == "Enter" {
-            let nickname: String = String(line[2])
+        let info = String(line[0])
+        let uid = String(line[1])
+        
+        if info != "Leave" {
+            let nickname = String(line[2])
             dict[uid] = nickname
+        }
+        
+        if info != "Change" {
             enterLeave.append([info, uid])
-        } else if info == "Leave" {
-            enterLeave.append([info, uid])
-        } else {
-            let nickname: String = String(line[2])
-            dict[uid] = nickname
         }
     }
     
@@ -29,5 +28,6 @@ func solution(_ record:[String]) -> [String] {
             result.append("\(nickname)님이 나갔습니다.")
         }
     }
+    
     return result
 }
