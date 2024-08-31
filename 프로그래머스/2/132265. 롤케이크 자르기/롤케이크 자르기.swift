@@ -1,28 +1,30 @@
 import Foundation
 
 func solution(_ topping: [Int]) -> Int {
-    var dic = [Int: Int]()
-    for t in topping {
-        dic[t, default: 0] += 1
-    }
+    var dict = [Int: Int]()
+    var setDict = Set<Int>()
+    var result = 0
     
-    var setDic = Set<Int>()
-    var res = 0
+    for t in topping {
+        dict[t, default: 0] += 1
+    }
     
     for i in topping {
-        if let count = dic[i] {
+        if let count = dict[i] {
             if count == 1 {
-                dic.removeValue(forKey: i)
+                dict.removeValue(forKey: i)
             } else {
-                dic[i] = count - 1
+                dict[i] = count - 1
             }
         }
-        setDic.insert(i)
         
-        if dic.count == setDic.count {
-            res += 1
+        setDict.insert(i)
+        
+        if dict.count == setDict.count {
+            result += 1
         }
     }
     
-    return res
+    return result
 }
+
