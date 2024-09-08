@@ -1,64 +1,56 @@
-import Foundation
-
 func readInput() -> (Int, Int, Int, [[Int]]) {
-    let firstLine = readLine()!.split(separator: " ").map { Int($0)! }
-    let N = firstLine[0]
-    let M = firstLine[1]
-    let V = firstLine[2]
-    
-    var graph = [[Int]](repeating: [], count: N + 1)
-
-    for _ in 0..<M {
-        let relation = readLine()!.split(separator: " ").map { Int(String($0))! }
-        let a = relation[0]
-        let b = relation[1]
+    let line = readLine()!.split(separator: " ").map{ Int($0)! }
+    let node = line[0], edge = line[1], startNode = line[2]
+    var graph: [[Int]] = [[Int]](repeating: [], count: node+1)
+    for _ in 0..<edge {
+        let line = readLine()!.split(separator: " ").map{ Int($0)! }
+        let a = line[0], b = line[1]
         graph[a].append(b)
         graph[b].append(a)
+        graph[a].sort()
+        graph[b].sort()
     }
-    
-    for i in 1...N {
-        graph[i].sort()
-    }
-    
-    return (N, M, V, graph)
+    return (node, edge, startNode, graph)
 }
 
-func dfs(node: Int, graph: [[Int]], visited: inout [Bool]) {
-    visited[node] = true
-    print(node, terminator: " ")
-    
-    for nextNode in graph[node] {
-        if !visited[nextNode] {
-            dfs(node: nextNode, graph: graph, visited: &visited)
+func dfs(_ curr: Int, _ graph: [[Int]], _ visited: inout [Bool], _ result: inout [Int]) {
+    result.append(curr)
+    visited[curr] = true
+    for next in graph[curr] {
+        if !visited[next] {
+            dfs(next, graph, &visited, &result)
         }
     }
 }
 
-func bfs(startNode: Int, graph: [[Int]], visited: inout [Bool]) {
-    var queue = [startNode]
-    var index = 0
-    visited[startNode] = true
-    
-    while index < queue.count {
-        let currentNode = queue[index]
-        print(currentNode, terminator: " ")
-        
-        for nextNode in graph[currentNode] {
-            if !visited[nextNode] {
-                visited[nextNode] = true
-                queue.append(nextNode)
+func bfs(_ curr: Int, _ graph: [[Int]], _ visited: inout [Bool], _ result: inout [Int]) {
+    var queue: [Int] = [curr]
+    result.append(curr)
+    visited[curr] = true
+    while !queue.isEmpty {
+        let now = queue.removeFirst()
+        for next in graph[now] {
+            if !visited[next] {
+                result.append(next)
+                visited[next] = true
+                queue.append(next)
             }
         }
-        index += 1
     }
 }
 
-let (N, M, V, graph) = readInput()
+func main() {
+    let (node, edge, startNode, graph) = readInput()
+    var visited: [Bool] = [Bool](repeating: false, count: node+1)
+    var result: [Int] = []
+    
+    dfs(startNode, graph, &visited, &result)
+    result.forEach { print($0, terminator: " ")}
+    print()
+    visited = [Bool](repeating: false, count: node+1)
+    result = []
+    bfs(startNode, graph, &visited, &result)
+    result.forEach { print($0, terminator: " ")}
+}
 
-var visited = [Bool](repeating: false, count: N + 1)
-dfs(node: V, graph: graph, visited: &visited)
-print()
-
-visited = [Bool](repeating: false, count: N + 1)
-bfs(startNode: V, graph: graph, visited: &visited)
-print()
+main()
