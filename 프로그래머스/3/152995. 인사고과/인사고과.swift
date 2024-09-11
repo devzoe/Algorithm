@@ -1,26 +1,23 @@
-func solution(_ scores:[[Int]]) -> Int {
-    let target = scores[0] 
+func solution(_ scores: [[Int]]) -> Int {
+    let target = scores[0]
+    let sum = target.reduce(0, +)
+    let sortedScores = scores.sorted { ($0[0] > $1[0]) || ($0[0] == $1[0] && $0[1] < $1[1]) }
     
-    let sortedScores = scores.sorted(by: { $0[0] > $1[0] || ($0[0] == $1[0] && $0[1] < $1[1]) })
-    var maxScore = sortedScores.first![1]
-    
-    var s = [[Int]]()
+    var maxCompany = 0
+    var answer = 1
     
     for score in sortedScores {
-        if maxScore > score[1] {
-            if score == target { return -1 }
-            continue
-        } else {
-            s.append(score)
+        if target[0] < score[0] && target[1] < score[1] {
+            return -1
         }
-        maxScore = max(maxScore, score[1])
+        
+        if maxCompany <= score[1] {
+            if sum < score[0] + score[1] {
+                answer += 1
+            }
+            maxCompany = score[1]
+        }
     }
     
-    let allScore = s.map { $0[0] + $0[1] }.sorted(by: >)
-
-    guard let rank = allScore.firstIndex(of: target.reduce(0, +)) else {
-        return -1
-    }
-    
-    return rank + 1
+    return answer
 }
