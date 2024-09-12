@@ -1,46 +1,41 @@
-
 import Foundation
 
 func readInput() -> (Int, [[Int]]) {
     let N = Int(readLine()!)!
-    var board: [[Int]] = [[Int]]()
+    var map: [[Int]] = []
     for _ in 0..<N {
         let line = readLine()!.split(separator: " ").map { Int($0)! }
-        board.append(line)
+        map.append(line)
     }
-    return (N, board)
+    return (N, map)
 }
 
-func movePipe(_ N: Int, _ board: [[Int]]) -> Int {
+func DP( _ N: Int, _ map: [[Int]]) {
     var dp: [[[Int]]] = [[[Int]]](repeating: [[Int]](repeating: [Int](repeating: 0, count: N), count: N), count: 3)
     dp[0][0][1] = 1
-    for i in 2..<N {
-        if board[0][i] == 0 {
-            dp[0][0][i] = dp[0][0][i-1]
-        }
-    }
-    for i in 1..<N {
+    for i in 0..<N {
         for j in 1..<N {
-            if board[i][j] == 0 && board[i][j-1] == 0 && board[i-1][j] == 0 {
-                dp[1][i][j] = dp[0][i-1][j-1] + dp[1][i-1][j-1] + dp[2][i-1][j-1]
-            }
-            
-            if board[i][j] == 0 {
-                dp[0][i][j] = dp[0][i][j-1] + dp[1][i][j-1]
-                dp[2][i][j] = dp[2][i-1][j] + dp[1][i-1][j]
+            if map[i][j] == 0 {
+                if i == 0 {
+                    if j > 1 {
+                        dp[0][i][j] = dp[0][i][j-1]
+                    }
+                } else {
+                        dp[0][i][j] = dp[0][i][j-1] + dp[2][i][j-1]
+                        dp[1][i][j] = dp[1][i-1][j] + dp[2][i-1][j]
+                    if map[i-1][j] == 0 && map[i][j-1] == 0 {
+                        dp[2][i][j] = dp[0][i-1][j-1] + dp[1][i-1][j-1] + dp[2][i-1][j-1]
+                    }
+                }
             }
         }
     }
-    var sum = 0
-    for i in 0..<3 {
-        sum += dp[i][N-1][N-1]
-    }
-    return sum
+    print(dp[0][N-1][N-1]+dp[1][N-1][N-1]+dp[2][N-1][N-1])
 }
 
 func main() {
-    let (N, board) = readInput()
-    print(movePipe(N, board))
+    let (N, map) = readInput()
+    DP(N,map)
+    
 }
-
 main()
