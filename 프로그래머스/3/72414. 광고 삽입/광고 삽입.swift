@@ -1,47 +1,49 @@
 import Foundation
 
-func timeStringToSeconds(_ time: String) -> Int {
-    let parts = time.split(separator: ":").map { Int($0)! }
-    return parts[0] * 3600 + parts[1] * 60 + parts[2]
+func strToInt(_ time: String) -> Int {
+    let components = time.split(separator: ":").map { Int($0)! }
+    return components[0] * 3600 + components[1] * 60 + components[2]
 }
 
-func secondsToTimeString(_ seconds: Int) -> String {
-    let hours = seconds / 3600
-    let minutes = (seconds % 3600) / 60
-    let seconds = seconds % 60
-    return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+func intToStr(_ time: Int) -> String {
+    let h = time / 3600
+    let m = (time % 3600) / 60
+    let s = time % 60
+    return String(format: "%02d:%02d:%02d", h, m, s)
 }
 
 func solution(_ play_time: String, _ adv_time: String, _ logs: [String]) -> String {
-    let playTime = timeStringToSeconds(play_time)
-    let advTime = timeStringToSeconds(adv_time)
-    var totalTimes = [Int](repeating: 0, count: playTime + 1)
+    let playTime = strToInt(play_time)
+    let advTime = strToInt(adv_time)
+    var allTime = [Int](repeating: 0, count: playTime + 1)
     
     for log in logs {
-        let parts = log.split(separator: "-").map { timeStringToSeconds(String($0)) }
-        let start = parts[0]
-        let end = parts[1]
-        totalTimes[start] += 1
-        if end <= playTime {
-            totalTimes[end] -= 1
+        let times = log.split(separator: "-").map { String($0) }
+        let start = strToInt(times[0])
+        let end = strToInt(times[1])
+        allTime[start] += 1
+        if end <= playTime { 
+            allTime[end] -= 1
         }
     }
     
-    for i in 1...playTime {
-        totalTimes[i] += totalTimes[i - 1]
+    for i in 1..<allTime.count {
+        allTime[i] += allTime[i - 1]
     }
     
-    var maxTime = totalTimes[0..<advTime].reduce(0, +)
-    var maxStartTime = 0
-    var currentSum = maxTime
+    for i in 1..<allTime.count {
+        allTime[i] += allTime[i - 1]
+    }
     
-    for i in advTime..<playTime {
-        currentSum += totalTimes[i] - totalTimes[i - advTime]
-        if currentSum > maxTime {
-            maxTime = currentSum
-            maxStartTime = i - advTime + 1
+    var mostView = 0
+    var maxTime = 0
+    for i in advTime - 1..<playTime {
+        let currentView = allTime[i] - (i >= advTime ? allTime[i - advTime] : 0)
+        if currentView > mostView {
+            mostView = currentView
+            maxTime = i - advTime + 1
         }
     }
-    
-    return secondsToTimeString(maxStartTime)
+
+    return intToStr(maxTime)
 }
