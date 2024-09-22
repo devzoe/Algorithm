@@ -1,15 +1,12 @@
-import Foundation
+func solution(_ A:[Int], _ B:[Int]) -> Int {
+    var result = 0
 
-func solution(_ A:[Int], _ B:[Int]) -> Int
-{
-    let l = A.count
-    let a = A.sorted()
-    let b = B.sorted()
-    var sum = 0
-    for i in 0..<l {
-        let c = a[i] * b[l-i-1]
-        sum += c
+    var temp1 = A.sorted{$0>$1}
+    var temp2 = B.sorted{$0<$1}
+    
+    for i in 0..<A.count {
+        result += temp1[i] * temp2[i]
     }
-
-    return sum
+    
+    return result
 }
