@@ -1,131 +1,121 @@
 import Foundation
-//힙
-public struct Heap<T> {
-  var nodes: [T] = []
-  let comparer: (T,T) -> Bool
 
-  var isEmpty: Bool {
-      return nodes.isEmpty
-  }
-
-  init(comparer: @escaping (T,T) -> Bool) {
-      self.comparer = comparer
-  }
-
-  func peek() -> T? {
-      return nodes.first
-  }
-
-  mutating func insert(_ element: T) {
-      var index = nodes.count
-
-      nodes.append(element)
-
-      while index > 0, !comparer(nodes[index],nodes[(index-1)/2]) {
-          nodes.swapAt(index, (index-1)/2)
-          index = (index-1)/2
-      }
-  }
-
-  mutating func delete() -> T? {
-      guard !nodes.isEmpty else {
-          return nil
-      }
-
-      if nodes.count == 1 {
-          return nodes.removeFirst()
-      }
-
-      let result = nodes.first
-      nodes.swapAt(0, nodes.count-1)
-      _ = nodes.popLast()
-
-      var index = 0
-
-      while index < nodes.count {
-          let left = index * 2 + 1
-          let right = left + 1
-
-          if right < nodes.count {
-              if comparer(nodes[left], nodes[right]),
-                  !comparer(nodes[right], nodes[index]) {
-                  nodes.swapAt(right, index)
-                  index = right
-              } else if !comparer(nodes[left], nodes[index]){
-                  nodes.swapAt(left, index)
-                  index = left
-              } else {
-                  break
-              }
-          } else if left < nodes.count {
-              if !comparer(nodes[left], nodes[index]) {
-                  nodes.swapAt(left, index)
-                  index = left
-              } else {
-                  break
-              }
-          } else {
-              break
-          }
-      }
-
-      return result
-  }
+struct Edge {
+    let destination: Int
+    let weight: Int
 }
 
-extension Heap where T: Comparable {
-    init() {
-        self.init(comparer: >)
-    }
-}
-
-struct EdgeData : Comparable{
-    static func < (lhs: EdgeData, rhs: EdgeData) -> Bool {
-        lhs.cost < rhs.cost
-    }
+struct Node: Comparable {
+    let vertex: Int
+    let cost: Int
     
-    var cost : Int
-    var node : Int
+    static func < (lhs: Node, rhs: Node) -> Bool {
+        return lhs.cost < rhs.cost
+    }
 }
 
-
-func solution(){
-    let inf = 7777777
-    let firstLine = readLine()!.split(separator: " ").map({Int(String($0))!})
-    let v = firstLine[0]
-    let e = firstLine[1]  
-    let start = Int(readLine()!)! - 1 
-    var graph = Array(repeating: [(Int,Int)]() , count: v)
-    for _ in 0..<e{
-        let line = readLine()!.split(separator: " ").map({Int(String($0))!})
-        graph[line[0]-1].append((line[1]-1,line[2]))
-    }
-    var d = Array(repeating: inf, count: v)
-    d[start] = 0
-    var pq: Heap = Heap<EdgeData>()
-    pq.insert(EdgeData(cost: 0,node: start))
+func dijkstra(_ start: Int, _ graph: [[Edge]], _ distances: inout [Int]) {
+    var priorityQueue = PriorityQueue<Node>()
+    distances[start] = 0
+    priorityQueue.push(Node(vertex: start, cost: 0))
     
-    while(!pq.isEmpty){
-        let now = pq.delete()!
-        if d[now.node] < now.cost{
+    while !priorityQueue.isEmpty() {
+        let current = priorityQueue.pop()!
+        
+        if current.cost > distances[current.vertex] {
             continue
         }
         
-        for next in graph[now.node]{
-            if now.cost + next.1 < d[next.0]{
-                d[next.0] = now.cost + next.1
-                pq.insert(EdgeData(cost: now.cost + next.1,node: next.0))
+        for edge in graph[current.vertex] {
+            let newCost = current.cost + edge.weight
+            
+            if newCost < distances[edge.destination] {
+                distances[edge.destination] = newCost
+                priorityQueue.push(Node(vertex: edge.destination, cost: newCost))
             }
         }
     }
-    
-    for i in d{
-        if i == inf{
-            print("INF")
-        } else {
-            print(i)
-        }
-    }  
 }
 
-solution()
+struct PriorityQueue<T: Comparable> {
+    private var heap = [T]()
+    
+    func isEmpty() -> Bool {
+        return heap.isEmpty
+    }
+    
+    func peek() -> T? {
+        return heap.first
+    }
+    
+    mutating func push(_ element: T) {
+        heap.append(element)
+        shiftUp(heap.count - 1)
+    }
+    
+    mutating func pop() -> T? {
+        guard !heap.isEmpty else { return nil }
+        if heap.count == 1 {
+            return heap.removeFirst()
+        } else {
+            let first = heap.first
+            heap[0] = heap.removeLast()
+            shiftDown(0)
+            return first
+        }
+    }
+    
+    private mutating func shiftUp(_ index: Int) {
+        var index = index
+        while index > 0 && heap[index] < heap[(index - 1) / 2] {
+            heap.swapAt(index, (index - 1) / 2)
+            index = (index - 1) / 2
+        }
+    }
+    
+    private mutating func shiftDown(_ index: Int) {
+        var index = index
+        while index * 2 + 1 < heap.count {
+            var child = index * 2 + 1
+            if child + 1 < heap.count && heap[child + 1] < heap[child] {
+                child += 1
+            }
+            if heap[index] < heap[child] {
+                break
+            }
+            heap.swapAt(index, child)
+            index = child
+        }
+    }
+}
+
+func main() {
+    let firstLine = readLine()!.split(separator: " ").map { Int($0)! }
+    let V = firstLine[0]
+    let E = firstLine[1]
+    
+    let start = Int(readLine()!)!
+    
+    var graph = Array(repeating: [Edge](), count: V + 1)
+    
+    for _ in 0..<E {
+        let edgeInfo = readLine()!.split(separator: " ").map { Int($0)! }
+        let u = edgeInfo[0]
+        let v = edgeInfo[1]
+        let w = edgeInfo[2]
+        graph[u].append(Edge(destination: v, weight: w))
+    }
+    
+    var distances = Array(repeating: Int.max, count: V + 1)
+    dijkstra(start, graph, &distances)
+    
+    for i in 1...V {
+        if distances[i] == Int.max {
+            print("INF")
+        } else {
+            print(distances[i])
+        }
+    }
+}
+
+main()
