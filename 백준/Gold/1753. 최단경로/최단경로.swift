@@ -1,6 +1,5 @@
 import Foundation
-
-
+//힙
 public struct Heap<T> {
   var nodes: [T] = []
   let comparer: (T,T) -> Bool
@@ -80,8 +79,6 @@ extension Heap where T: Comparable {
     }
 }
 
-// Heap By 라이노님 https://gist.github.com/JCSooHwanCho/a3f070c2160bb8c0047a5ddbb831f78e
-
 struct EdgeData : Comparable{
     static func < (lhs: EdgeData, rhs: EdgeData) -> Bool {
         lhs.cost < rhs.cost
@@ -96,23 +93,18 @@ func solution(){
     let inf = 7777777
     let firstLine = readLine()!.split(separator: " ").map({Int(String($0))!})
     let v = firstLine[0]
-    let e = firstLine[1]
-    
-    let start = Int(readLine()!)! - 1
-    
+    let e = firstLine[1]  
+    let start = Int(readLine()!)! - 1 
     var graph = Array(repeating: [(Int,Int)]() , count: v)
     for _ in 0..<e{
         let line = readLine()!.split(separator: " ").map({Int(String($0))!})
         graph[line[0]-1].append((line[1]-1,line[2]))
     }
-    
-
     var d = Array(repeating: inf, count: v)
     d[start] = 0
-
-        
     var pq: Heap = Heap<EdgeData>()
     pq.insert(EdgeData(cost: 0,node: start))
+    
     while(!pq.isEmpty){
         let now = pq.delete()!
         if d[now.node] < now.cost{
@@ -120,21 +112,20 @@ func solution(){
         }
         
         for next in graph[now.node]{
-
             if now.cost + next.1 < d[next.0]{
                 d[next.0] = now.cost + next.1
                 pq.insert(EdgeData(cost: now.cost + next.1,node: next.0))
             }
         }
     }
+    
     for i in d{
         if i == inf{
             print("INF")
         } else {
             print(i)
         }
-    }
-    
+    }  
 }
 
 solution()
