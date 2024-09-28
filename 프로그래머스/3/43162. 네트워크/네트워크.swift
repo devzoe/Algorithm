@@ -23,9 +23,7 @@ func solution(_ n:Int, _ computers:[[Int]]) -> Int {
             dfs(i,i,&visited)
         }
     }
-    var d: [Int:Int] = [:]
-    visited.forEach {
-        d[$0, default:0] += 1
-    }
-    return d.keys.count
+    var v: Set<Int> = []
+    v = Set(visited)
+    return v.count
 }
