@@ -1,10 +1,10 @@
 # [level 3] 카드 짝 맞추기 - 72415 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/72415?language=swift) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/72415) 
 
 ### 성능 요약
 
-메모리: 16.5 MB, 시간: 123.41 ms
+메모리: 16.7 MB, 시간: 226.18 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 08월 15일 05:08:00
+2024년 10월 01일 05:39:29
 
 ### 문제 설명
 
