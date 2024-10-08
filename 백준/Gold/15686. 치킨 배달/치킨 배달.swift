@@ -1,64 +1,56 @@
 import Foundation
 
-func readInput() -> (Int, Int, [[Int]]) {
-    let firstLine = readLine()!.split(separator: " ").map { Int($0)! }
-    let N = firstLine[0]
-    let M = firstLine[1]
-
-    var city = [[Int]]()
-    for _ in 0..<N {
-        let cityLine = readLine()!.split(separator: " ").map { Int($0)! }
-        city.append(cityLine)
+func combination(_ n: Int, _ k: Int) -> [[Int] ]{
+    var result: [[Int]] = []
+    var arr: [Int] = [Int](repeating: 0, count: n)
+    for i in 0..<n { arr[i] = i}
+    func backtrack(_ curr: Int, _ ans: inout [Int]) {
+        if ans.count == k {
+            result.append(ans)
+            return
+        }
+        for i in curr..<n {
+            ans.append(i)
+            backtrack(i+1, &ans)
+            ans.removeLast()
+        }
     }
-    return (N, M, city)
+    var ans: [Int] = []
+    backtrack(0, &ans)
+    return result
 }
 
-//조합
-func combination<T>(_ array: [T], _ r: Int) -> [[T]] {
-    if r == 0 { return [[]] }
-    guard let first = array.first else { return [] }
-    
-    let head = [first]
-    let subarray = Array(array.dropFirst())
-    
-    let withFirst = combination(subarray, r - 1).map { head + $0 }
-    let withoutFirst = combination(subarray, r)
-    
-    return withFirst + withoutFirst
-}
-
-func calculateCost(N: Int, M: Int, city: [[Int]]) -> Int {
-    var house = [[Int]]()
-    var chicken = [[Int]]()
-    for i in 0..<N {
-        for j in 0..<N {
-            if city[i][j] == 1 { //집
-                house.append([i,j])
-            } else if city[i][j] == 2 {//치킨집
-                chicken.append([i,j])
+func main() {
+    let nm = readLine()!.split(separator: " ").map { Int($0)! }
+    let n = nm[0], m = nm[1]
+    var map: [[Int]] = [[Int]](repeating: [Int](repeating: 0, count: n), count: n)
+    var chicken: [(Int,Int)] = []
+    var home: [(Int,Int)] = []
+    for i in 0..<n {
+        let line = readLine()!.split(separator: " ").map { Int($0)! }
+        for j in 0..<n {
+            map[i][j] = line[j]
+            if line[j] == 2 {
+                chicken.append((i,j))
+            } else if line[j] == 1 {
+                home.append((i,j))
             }
         }
     }
-    let combi = combination(chicken, M)
-    var result = [Int]()
-    
-    for combination in combi {
-        var selectedDistance = 0
-        for h in house {
-            var minDistance = 100000
-            for j in combination {
-                let distance = abs(j[0]-h[0]) + abs(j[1]-h[1])
-                if distance < minDistance {
-                    minDistance = distance
-                }
+    let comb = combination(chicken.count, m)
+    var result = Int.max
+    for c in comb {
+        var sum = 0
+        for h in home {
+            var minL = Int.max
+            for i in c {
+                let l = abs(h.0 - chicken[i].0) + abs(h.1 - chicken[i].1)
+                minL = min(l, minL)
             }
-            selectedDistance += minDistance
+            sum += minL
         }
-        result.append(selectedDistance)
+        result = min(result, sum)
     }
-    return result.min() ?? -1
+    print(result)
 }
-
-let (N, M, city) = readInput()
-let result = calculateCost(N: N, M: M, city: city)
-print(result)
+main()
