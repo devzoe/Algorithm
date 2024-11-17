@@ -3,12 +3,9 @@ func main() {
     let arr = readLine()!.split(separator: " ").map { Int($0)! }
     let line = readLine()!.split(separator: " ").map { Int($0)! }
     let (a, b) = (line[0] - 1, line[1] - 1)
-
-    var costs: [Int] = [Int](repeating: Int.max, count: n)
     var visited: [Bool] = [Bool](repeating: false, count: n)
     var queue: [(Int, Int)] = [(a, 0)]
     
-    costs[a] = 0
     visited[a] = true
 
     while !queue.isEmpty {
