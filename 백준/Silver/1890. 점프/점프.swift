@@ -2,26 +2,27 @@ import Foundation
 
 func main() {
     let n = Int(readLine()!)!
-    var map: [[Int]] = []
+    var arr = [[Int]]()
     for _ in 0..<n {
         let line = readLine()!.split(separator: " ").map { Int($0)! }
-        map.append(line)
+        arr.append(line)
     }
-    var costs = [[Int]](repeating: [Int](repeating: 0, count: n), count: n)
-    costs[0][0] = 1
-    let direction = [(0,1),(1,0)]
+    var dp:[[Int]] = [[Int]](repeating: [Int](repeating: 0, count: n), count: n)
+    dp[0][0] = 1
     for i in 0..<n {
         for j in 0..<n {
-            if i == n-1 && j == n-1 { break }
-            for d in direction {
-                let x = i + map[i][j]*d.0
-                let y = j + map[i][j]*d.1
-                if x < n && y < n {
-                    costs[x][y] += costs[i][j]
+            if arr[i][j] == 0 { break }
+            if dp[i][j] > 0 {
+                let m = arr[i][j]
+                if i+m < n {
+                    dp[i+m][j] += dp[i][j]
+                }
+                if j+m < n {
+                    dp[i][j+m] += dp[i][j]
                 }
             }
         }
     }
-    print(costs[n-1][n-1])
+    print(dp[n-1][n-1])
 }
 main()
