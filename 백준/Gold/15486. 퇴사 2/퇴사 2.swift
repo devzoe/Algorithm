@@ -1,30 +1,21 @@
 import Foundation
 
-func readInput() -> (Int, [[Int]]) {
-    let N = Int(readLine()!)!
-    var cost = [[Int]]()
-    for _ in 0..<N {
-        let costLine = readLine()!.split(separator: " ").map { Int($0)! }
-        cost.append(costLine)
+func main() {
+    let n = Int(readLine()!)!
+    var arr = [[Int]]()
+    for _ in 0..<n {
+        let line = readLine()!.split(separator: " ").map { Int($0)!}
+        arr.append(line)
     }
-    return (N, cost)
-}
-
-func calculateCost(N: Int, cost: [[Int]]) -> Int {
-    var memoCost: [Int] = Array(repeating: 0, count: N + 1)
-    var maxProfit = 0
-
-    for i in 0..<N {
-        maxProfit = max(maxProfit, memoCost[i])
-        let endDay = i + cost[i][0]
-        if endDay <= N {
-            memoCost[endDay] = max(memoCost[endDay], maxProfit + cost[i][1])
+    var dp = [Int](repeating: 0, count: n+1)
+    for (i,a) in arr.enumerated() {
+        let (t, p) = (a[0], a[1])
+        if i > 0 && dp[i] < dp[i-1]{ dp[i] = dp[i-1] }
+        if i+t <= n {
+            dp[i+t] = max(dp[i] + p, dp[i+t])
         }
     }
+    print(dp.max()!)
     
-    return memoCost.max()!
 }
-
-let (N, cost) = readInput()
-let result = calculateCost(N: N, cost: cost)
-print(result)
+main()
