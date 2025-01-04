@@ -1,64 +1,47 @@
 import Foundation
 
-func readInput() -> [[Int]] {
-    let N = Int(readLine()!)!
-    var map = Array(repeating: Array(repeating: 0, count: N), count: N)
+func bfs(_ n: Int, _ arr: [[Int]], _ i: Int, _ j: Int, _ visited: inout [[Bool]]) -> Int {
+    var cnt = 0
+    var queue: [(Int,Int)] = [(i,j)]
+    let direction = [(0,1),(0,-1),(1,0),(-1,0)]
+    visited[i][j] = true
+    cnt += 1
+    while !queue.isEmpty {
+        let (x, y) = queue.removeFirst()
+        for d in direction {
+            let newX = x+d.0
+            let newY = y+d.1
+            if 0 <= newX && newX < n && 0 <= newY && newY < n && !visited[newX][newY] && arr[newX][newY] == 1 {
+                queue.append((newX,newY))
+                visited[newX][newY] = true
+                cnt += 1
+            }
+        }
+    }
+    return cnt
+}
 
-    for i in 0..<N {
+func main() {
+    let n = Int(readLine()!)!
+    var arr = [[Int]]()
+    for _ in 0..<n {
         let line = readLine()!.map { Int(String($0))! }
-        for j in 0..<line.count {
-            map[i][j] = line[j]
-        }
-    }  
-    return map
-}
-
-func dfs(map: inout [[Int]], start: (x: Int, y: Int)) -> Int {
-    var stack = [start]
-    map[start.x][start.y] = 0
-    let dx = [0, 0, 1, -1]
-    let dy = [1, -1, 0, 0]
-    var out = 1
-    
-    while !stack.isEmpty {
-        let node = stack.removeLast()
-        
-        for i in 0..<dx.count {
-            let nextX = node.x + dx[i]
-            let nextY = node.y + dy[i]
-            if nextX < 0 || nextX >= map.count || nextY < 0 || nextY >= map.count {
-                continue
-            } else {
-                if map[nextX][nextY] == 1 {
-                    map[nextX][nextY] = 0
-                    stack.append((nextX, nextY))
-                    out += 1
-                }
+        arr.append(line)
+    }
+    var visited: [[Bool]] = [[Bool]](repeating: [Bool](repeating: false, count: n), count: n)
+    var result: [Int] = []
+    for i in 0..<n {
+        for j in 0..<n {
+            if !visited[i][j] && arr[i][j] == 1 {
+                let cnt = bfs(n, arr, i, j, &visited)
+                result.append(cnt)
             }
         }
     }
-    return out
-}
-
-func solution(map: inout [[Int]]) -> [Int] {
-    var answer = [Int]()
-    var complexNumber = 0
-    
-    for i in 0..<map.count {
-        for j in 0..<map.count {
-            if map[i][j] == 1 {
-                complexNumber += 1
-                answer.append(dfs(map: &map, start: (i, j)))
-            }
-        }
+    print(result.count)
+    result.sort()
+    result.forEach { i in
+        print(i)
     }
-    
-    print(complexNumber)
-    print(answer.sorted().map { String($0) }.joined(separator: "\n"))
-    
-    return answer
 }
-
-
-var map = readInput()
-solution(map: &map)
+main()
