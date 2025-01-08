@@ -30,7 +30,6 @@ func dfs(_ n: Int, _ i: Int, _ j: Int, _ arr: [[Int]], _ cost: Int, _ visited: i
         return
     }
     let direction = [(0,1),(0,-1),(1,0),(-1,0)]
-    let next = [(0,1),(1,0)]
     var yy = j
     for x in i..<n-1 {
         for y in yy..<n-1 {
