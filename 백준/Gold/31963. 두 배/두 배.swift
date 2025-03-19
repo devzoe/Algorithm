@@ -1,19 +1,39 @@
 import Foundation
 
-let n = Int(readLine()!)!
-var arr = readLine()!.split(separator: " ").map { Int($0)! }
-var result = 0
-while true {
-    let temp = arr.sorted()
-    if temp == arr { break }
-    else {
-        for i in 1..<arr.count {
-            if arr[i-1] > arr[i] {
-                result += 1
-                arr[i] *= 2
-            }
+func diff(_ exInt: Int, _ curInt: Int) -> Int {
+    var ex = Double(exInt)
+    var cur = Double(curInt)
+    
+    ex *= pow(2, 20)
+    
+    for n in -20..<0 {
+        if ex <= cur {
+            return n
         }
+        ex /= 2
+    }
+    
+    for n in 0..<20 {
+        if ex <= cur {
+            return n
+        }
+        cur *= 2
+    }
+    return 20
+}
+
+let N = Int(readLine()!)!
+var A = readLine()!.split(separator: " ").map { Int($0)! }
+var P = [Int](repeating: 0, count: N+1)
+var ans = 0
+
+for i in 1..<N {
+    let d = diff(A[i-1], A[i]) + max(0, P[i-1])
+    P[i] = d
+    
+    if d > 0 {
+        ans += d
     }
 }
 
-print(result)
+print(ans)
